@@ -1,0 +1,4 @@
+TiendaMascotas/bin/*
+TiendaMascotas/obj/*
+packages/*
+*.suo
