@@ -11,15 +11,15 @@ namespace TiendaMascotas.Controllers
     public class ProductController : Controller
     {
         // GET: Product
-        public ActionResult Index()
+        public ActionResult ProductIndex()
         {
             return View();
         }
 
         [HttpPost]
-        public JsonResult AddNewProduct([Bind(Include = "Code, Name, Category, Quantity, Price")] Product ObjProduct)
+        public JsonResult AddNewProduct([Bind(Include = "Code, Name, Quantity, Price")] Product ObjProduct)
         {
-            if (!string.IsNullOrEmpty(ObjProduct.Code) && !string.IsNullOrEmpty(ObjProduct.Name) && !string.IsNullOrEmpty(ObjProduct.Category) && !string.IsNullOrEmpty(ObjProduct.Quantity) && !string.IsNullOrEmpty(ObjProduct.Price))
+            if (!string.IsNullOrEmpty(ObjProduct.Code) && !string.IsNullOrEmpty(ObjProduct.Name) &&  ObjProduct.Quantity != null && ObjProduct.Price != null)
             {
                 var LastProduct = ProductData.ProductsList.LastOrDefault();
                 if (LastProduct == null)
@@ -54,20 +54,25 @@ namespace TiendaMascotas.Controllers
 
         //Need to fix the SoldStatus
         [HttpPut]
-        public JsonResult UpdateProduct([Bind(Include = "Id, Code, Name, Category, Quantity, Price")] Product ObjProduct)
+        public JsonResult UpdateProduct([Bind(Include = "Id, Code, Name, Quantity, Price")] Product ObjProduct)
         {
             if(ObjProduct.Id != null)
             {
                 var EditProduct = ProductData.ProductsList.Where(P => P.Id == ObjProduct.Id).FirstOrDefault();
                 EditProduct.Code = ObjProduct.Code;
                 EditProduct.Name = ObjProduct.Name;
-                EditProduct.Category = ObjProduct.Category;
                 EditProduct.Quantity = ObjProduct.Quantity;
                 EditProduct.Price = ObjProduct.Price;
                 return Json(EditProduct, JsonRequestBehavior.AllowGet);
                 //Sold Status ???
             }
-            return Json(false, JsonRequestBehavior)
+            return Json(false, JsonRequestBehavior.AllowGet);
         }//Close UpdateProduct
-    }
+
+        [HttpGet]
+        public JsonResult GetAllProducts()
+        {
+            return Json(ProductData.ProductsList, JsonRequestBehavior.AllowGet);
+        }
+    }//Close GetAllProducts
 }
