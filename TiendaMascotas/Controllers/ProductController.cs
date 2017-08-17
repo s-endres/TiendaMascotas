@@ -19,7 +19,7 @@ namespace TiendaMascotas.Controllers
         [HttpPost]
         public JsonResult AddNewProduct([Bind(Include = "Code, Name, Quantity, Price")] Product ObjProduct)
         {
-            if (!string.IsNullOrEmpty(ObjProduct.Code) && !string.IsNullOrEmpty(ObjProduct.Name) &&  ObjProduct.Quantity != null && ObjProduct.Price != null)
+            if (!string.IsNullOrEmpty(ObjProduct.Code) && !string.IsNullOrEmpty(ObjProduct.Name))
             {
                 var LastProduct = ProductData.ProductsList.LastOrDefault();
                 if (LastProduct == null)
@@ -54,14 +54,13 @@ namespace TiendaMascotas.Controllers
 
         //Need to fix the SoldStatus
         [HttpPut]
-        public JsonResult UpdateProduct([Bind(Include = "Id, Code, Name, Quantity, Price")] Product ObjProduct)
+        public JsonResult UpdateProduct([Bind(Include = "Id, Code, Name, Price")] Product ObjProduct)
         {
             if(ObjProduct.Id != null)
             {
                 var EditProduct = ProductData.ProductsList.Where(P => P.Id == ObjProduct.Id).FirstOrDefault();
                 EditProduct.Code = ObjProduct.Code;
                 EditProduct.Name = ObjProduct.Name;
-                EditProduct.Quantity = ObjProduct.Quantity;
                 EditProduct.Price = ObjProduct.Price;
                 return Json(EditProduct, JsonRequestBehavior.AllowGet);
                 //Sold Status ???
@@ -73,6 +72,6 @@ namespace TiendaMascotas.Controllers
         public JsonResult GetAllProducts()
         {
             return Json(ProductData.ProductsList, JsonRequestBehavior.AllowGet);
-        }
-    }//Close GetAllProducts
+        }//Close GetAllProducts
+    }
 }

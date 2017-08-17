@@ -178,11 +178,13 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ProductTypeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Data\BillData.cs" />
     <Compile Include="Data\Data.cs" />
     <Compile Include="Data\DiscountData.cs" />
     <Compile Include="Data\ProductData.cs" />
+    <Compile Include="Data\ProductTypeData.cs" />
     <Compile Include="Data\UserData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1024,6 +1026,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Product\ProductIndex.cshtml" />
+    <Content Include="Views\ProductType\ProductTypeIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
