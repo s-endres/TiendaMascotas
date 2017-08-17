@@ -30,21 +30,27 @@
             responsive: true,
             "columns": [
                 { "data": "Id" },
+                { "data": "Code" },
                 { "data": "Name" },
-                { "data": "LastName" },
-                { "data": "Mail" },
-                { "data": "Phone" },
-                { "data": "ProductType" },
+                { "data": "IdProductType" },
+                { "data": "Price" },
                 {
                     "defaultContent": "<button type=\"button\"  data-toggle='modal' data-target='#DeleteModal' class=\"glyphicon glyphicon-trash\" onclick = \"removeRow(this)\"></button> " +
                     "<button type=\"button\" data-toggle=\"modal\" data-target=\"#myModal\" onclick =\"editRow(this)\" class = \"glyphicon glyphicon-pencil\">"
                 }
             ],
             "columnDefs": [{
-                "targets": [6],
+                "targets": [5],
                 "orderable": false
             }]
         });
+
+        //<--Event jQuery -->
+
+        $("#createProduct").click(function () {
+
+            window.location.replace('http://localhost:58176/Product/Create');
+        })
 
         $("#myModal").on('hidden.bs.modal', function () {
             $("#HiddenIndexDelete").val("");
@@ -70,7 +76,7 @@
             //    contentType: 'application/json; charset=utf-8',
             //    success: function (data) {
             //        if (data) {
-                        $table.row($("#indexId").val()).remove().draw();
+            $table.row($("#indexId").val()).remove().draw();
             //        }
             //        else {
             //            Console.log("data is false");
@@ -100,17 +106,17 @@
         //    contentType: 'application/json; charset=utf-8',
         //    success: function (data) {
         //        if (data) {
-                    var obj = {
-                        Id: "1",
-                        Name: $("#modalName").val(),
-                        LastName: $("#modalLastName").val(),
-                        Mail: $("#modalMail").val(),
-                        Phone: $("#ModalPhone").val(),
-                        ProductType: $("#selectProductType").val()
-                    }
-                    console.log($("#selectProductType").val())
-                    $table.row.add(obj).draw();
-                    $("#closeMyModal").click();
+        var obj = {
+            Id: "1",
+            Name: $("#modalName").val(),
+            LastName: $("#modalLastName").val(),
+            Mail: $("#modalMail").val(),
+            Phone: $("#ModalPhone").val(),
+            ProductType: $("#selectProductType").val()
+        }
+        console.log($("#selectProductType").val())
+        $table.row.add(obj).draw();
+        $("#closeMyModal").click();
         //        }
         //    }
         //});
@@ -142,37 +148,37 @@
         $("#indexId").val(rowIndex);
     }
     function editProductBotton() {
-            //$.ajax({
-            //    type: "PUT",
-            //    url: " http://localhost:58176/Product/UpdateProduct",
-            //    data: JSON.stringify({
-            //        Id: $("#ProductId").val(),
-            //        Name: $("#modalName").val(),
-            //        LastName: $("#modalLastName").val(),
-            //        Mail: $("#modalMail").val(),
-            //        Phone: $("#ModalPhone").val(),
-            //        ProductType: $("#selectProductType").val()
-            //    }),
-            //    dataType: "json",
-            //    contentType: 'application/json; charset=utf-8',
-            //    success: function (data) {
-            //        if (data) {
-                        var obj = {
-                            Id: "1",
-                            Name: $("#modalName").val(),
-                            LastName: $("#modalLastName").val(),
-                            Mail: $("#modalMail").val(),
-                            Phone: $("#ModalPhone").val(),
-                            ProductType: $("#selectProductType").val()
-                        };
-                        $table.row($("#indexId").val()).data(obj).draw();
-                        $("#closeMyModal").click();
-            //        }
-            //        else {
-            //            ValidateMyAlert("Class='alert alert-warning'", 'Something is wrong', 'Warning', "#alertContainer");
-            //        }
-            //    }
-            //});
+        //$.ajax({
+        //    type: "PUT",
+        //    url: " http://localhost:58176/Product/UpdateProduct",
+        //    data: JSON.stringify({
+        //        Id: $("#ProductId").val(),
+        //        Name: $("#modalName").val(),
+        //        LastName: $("#modalLastName").val(),
+        //        Mail: $("#modalMail").val(),
+        //        Phone: $("#ModalPhone").val(),
+        //        ProductType: $("#selectProductType").val()
+        //    }),
+        //    dataType: "json",
+        //    contentType: 'application/json; charset=utf-8',
+        //    success: function (data) {
+        //        if (data) {
+        var obj = {
+            Id: "1",
+            Name: $("#modalName").val(),
+            LastName: $("#modalLastName").val(),
+            Mail: $("#modalMail").val(),
+            Phone: $("#ModalPhone").val(),
+            ProductType: $("#selectProductType").val()
+        };
+        $table.row($("#indexId").val()).data(obj).draw();
+        $("#closeMyModal").click();
+        //        }
+        //        else {
+        //            ValidateMyAlert("Class='alert alert-warning'", 'Something is wrong', 'Warning', "#alertContainer");
+        //        }
+        //    }
+        //});
     }
 
 </script>
@@ -182,7 +188,7 @@
 
 <div class="panel-heading">
     DataTable Advanced Table |
-    <button type="button" class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#myModal"></button>
+    <button type="button" class="glyphicon glyphicon-plus" id="createProduct"></button>
 </div>
 <table id="myDT" class="table">
     <thead>
@@ -191,89 +197,42 @@
                 <label>Id</label>
             </th>
             <th>
+                <label>Code</label>
+            </th>
+            <th>
                 <label>Name</label>
             </th>
             <th>
-                <label>LastName</label>
+                <label>ProducType</label>
             </th>
             <th>
-                <label>Mail</label>
-            </th>
-            <th>
-                <label>Phone</label>
-            </th>
-            <th>
-                <label>Producttype</label>
+                <label>Price</label>
             </th>
             <th>
                 <label>Buttons</label>
             </th>
         </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
 </table>
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" id="titleModel">Add new Row to table</h4>
-            </div>
-
-            <div class="modal-body">
-
-                <div style="display:none" id="HiddenId">
-                    <label for="qwe"> Id</label><br>
-                    <input type="text" class=" form-control HiddenIndexx" id="ProductId" disabled> </input><br>
+        <!-- Delete Modal -->
+        <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="titleModelDelete">Delete</h4>
+                    </div>
+                    <div id="rowModalBody" class="modal-body">
+                        <label for="usr">Are you sure you want to delete a row</label><br>
+                        <button type="button" class="btn btn-default" id="yesDelete">yes</button>
+                        <button type="button" class="btn btn-default" id="noDelete" data-dismiss="modal">No</button>
+                        <input type="text" class="HiddenIndexx" id="HiddenIndexDelete" style="display:none"> </input>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeDeleteModal">Close</button>
+                    </div>
                 </div>
-                <label>Name:</label><br>
-                <input type="text" class="form-control" id="modalName"> </input><br>
-                <label>LastName:</label><br>
-                <input type="text" class="form-control" id="modalLastName"> </input><br>
-                <label>Mail:</label><br>
-                <input type="text" class="form-control" id="modalMail"> </input><br>
-                <label>Phone:</label><br>
-                <input type="tel" id="ModalPhone" pattern="[0-9]{9}" class="form-control"></input><br>
-                <label>ProductTYpe:</label><br>
-                <select id="selectProductType" class="form-control">
-                    <option value="1">" Client"</option>
-                    <option value="2">" employee"</option>
-                </select>
-                <input type="text" class="form-control" style="display:none" id="indexId"> </input><br>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeMyModal">Close</button>
-                    <button type="button" class="btn btn-default" id="Add" onclick="AddProduct()">Add</button>
-                    <button type="button" class="btn btn-default" id="edit" onclick="editProductBotton()" style="display:none">Edit</button>
-                </div>
-
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Delete Modal -->
-<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="titleModelDelete">Delete</h4>
-            </div>
-            <div id="rowModalBody" class="modal-body">
-                <label for="usr">Are you sure you want to delete a row</label><br>
-                <button type="button" class="btn btn-default" id="yesDelete">yes</button>
-                <button type="button" class="btn btn-default" id="noDelete" data-dismiss="modal">No</button>
-                <input type="text" class="HiddenIndexx" id="HiddenIndexDelete" style="display:none"> </input>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeDeleteModal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>

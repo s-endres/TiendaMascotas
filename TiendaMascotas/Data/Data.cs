@@ -45,32 +45,61 @@ namespace TiendaMascotas.Data
 
         public static List<Product> ProductList = new List<Product>();
 
-        public static List<ProductType> ProductTypeList = new List<ProductType>();
+        public static List<ProductType> ProductTypeList = new List<ProductType>()
+        { 
+            new ProductType()
+            {
+                Id = 1,
+                Name = "Small cage",
+                IdCategory = 2
+            },
+
+            new ProductType()
+            {
+                Id = 2,
+                Name = "Dog shirt",
+                IdCategory = 3
+            },
+
+            new ProductType()
+            {
+                Id = 3,
+                Name = "Rubber Bone",
+                IdCategory = 4
+            },
+
+            new ProductType()
+            {
+                Id = 4,
+                Name = "Dog food",
+                IdCategory = 1
+            }
+        };
 
         public static List<Category> CategoryList = new List<Category>()
         {
             new Category()
             {
                 Id = 1,
-                Name = "comida"
+                Name = "Food"
             },
 
             new Category()
             {
                 Id = 2,
-                Name = "jaula"
+                Name = "cage"
             },
 
             new Category()
             {
                 Id = 3,
-                Name = "ropa"
+                Name = "Clothes"
             },
 
             new Category()
             {
                 Id = 4,
-                Name = "juguete"
+                Name = "toy"
             }
         };
 
