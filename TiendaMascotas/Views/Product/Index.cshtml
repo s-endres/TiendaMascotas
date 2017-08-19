@@ -25,101 +25,97 @@
 
     $(document).ready(function () {
 
-        //<!--DataTables  Initialization -- >
-        $table = $("#myDT").DataTable({
-            responsive: true,
-            "columns": [
-                { "data": "Id" },
-                { "data": "Code" },
-                { "data": "Name" },
-                { "data": "IdProductType" },
-                { "data": "Price" },
-                {
-                    "defaultContent": "<button type=\"button\"  data-toggle='modal' data-target='#DeleteModal' class=\"glyphicon glyphicon-trash\" onclick = \"removeRow(this)\"></button> " +
-                    "<button type=\"button\" data-toggle=\"modal\" data-target=\"#myModal\" onclick =\"editRow(this)\" class = \"glyphicon glyphicon-pencil\">"
-                }
-            ],
-            "columnDefs": [{
-                "targets": [5],
-                "orderable": false
-            }]
-        });
-
         //<--Event jQuery -->
+
+        $.ajaxSetup({ async: false });
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:58176/Product/getAllProducts",
+            data: "",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+
+                var Data = [];
+                $.each(data, function () {
+                    var obj = {
+                        Id: this.Id,
+                        Code: this.Code,
+                        Name: this.Name,
+                        Price: this.Price,
+                        ProductType: getProductType(this.IdProductType)
+                    }
+                    Data.push(obj);
+                })
+                //<!--DataTables  Initialization -- >
+                $table = $("#myDT").DataTable({
+                    responsive: true,
+                    "data": Data,
+                    "columns": [
+                        { "data": "Id" },
+                        { "data": "Code" },
+                        { "data": "Name" },                     
+                        { "data": "ProductType"},
+                        { "data": "Price" },
+                        {
+                            "defaultContent": "<button type=\"button\"  data-toggle='modal' data-target='#DeleteModal' class=\"glyphicon glyphicon-trash\" onclick = \"removeRow(this)\"></button> " +
+                            "<button type=\"button\" data-toggle=\"modal\" data-target=\"#myModal\" onclick =\"editProduct(this)\" class = \"glyphicon glyphicon-pencil\">"
+                        }
+                    ],
+                    "columnDefs": [{
+                        "targets": [5],
+                        "orderable": false
+                    }]
+                });
+            },
+            error: function () {
+                ValidateMyAlert("Class='alert alert-danger'", 'error', 'Danger', "#alertContainer");
+            }
+        });
 
         $("#createProduct").click(function () {
 
             window.location.replace('http://localhost:58176/Product/Create');
         })
 
-        $("#myModal").on('hidden.bs.modal', function () {
-            $("#HiddenIndexDelete").val("");
-            $("#indexId").val("");
-            $("#modalName").val("");
-            $("#modalLastName").val("");
-            $("#modalMail").val("");
-            $("#ModalPhone").val("");
-            $("#Add").css("display", "inline");
-            $("#edit").css("display", "none");
-            $("#HiddenId").css("display", "none");
-            $("#titleModel").text("Add new Row to table");
-            $(".HiddenIndex, input[type='date]'").removeClass("Error");
-            $("#myModal p[Class='alert alert-danger']").remove();
-        });
 
         $("#yesDelete").click(function () {
-            //$.ajax({
-            //    type: "DELETE",
-            //    url: "http://localhost:58176/Product/RemoveProduct",
-            //    data: JSON.stringify({ ProductId: $("#HiddenIndexDelete").val() }),
-            //    dataType: "json",
-            //    contentType: 'application/json; charset=utf-8',
-            //    success: function (data) {
-            //        if (data) {
-            $table.row($("#indexId").val()).remove().draw();
-            //        }
-            //        else {
-            //            Console.log("data is false");
-            //        }
-            //    },
-            //    error: function () {
-            //        Alert("Error");
-            //    }
-            //});
+            $.ajax({
+                type: "DELETE",
+                url: "http://localhost:58176/Product/RemoveProduct",
+                data: JSON.stringify({ ProductId: $("#HiddenIndexDelete").val() }),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data) {
+                        $table.row($("#indexId").val()).remove().draw();
+                    }
+                    else {
+                        Console.log("data is false");
+                    }
+                },
+                error: function () {
+                    Alert("Error");
+                }
+            });
             $("#closeDeleteModal").click();
         });
 
     });
 
-    function AddProduct() {
-        //$.ajax({
-        //    type: "POST",
-        //    url: "http://localhost:58176/Product/AddProduct",
-        //    data: JSON.stringify({
-        //        Name: $("#modalName").val(),
-        //        LastName: $("#modalLastName").val(),
-        //        Mail: $("#modalMail").val(),
-        //        Phone: $("#ModalPhone").val(),
-        //        ProductType: $("#selectProductType").val()
-        //    }),
-        //    dataType: "json",
-        //    contentType: 'application/json; charset=utf-8',
-        //    success: function (data) {
-        //        if (data) {
-        var obj = {
-            Id: "1",
-            Name: $("#modalName").val(),
-            LastName: $("#modalLastName").val(),
-            Mail: $("#modalMail").val(),
-            Phone: $("#ModalPhone").val(),
-            ProductType: $("#selectProductType").val()
-        }
-        console.log($("#selectProductType").val())
-        $table.row.add(obj).draw();
-        $("#closeMyModal").click();
-        //        }
-        //    }
-        //});
+    function getProductType(numType) {
+        var type = "";
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:58176/ProductType/GetProductTypeById",
+            data: { productTypeId: numType },
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                type = data.Name;
+            }
+        });
+        return type;
     }
 
     function removeRow(button) {
@@ -130,55 +126,11 @@
         $("#indexId").val(rowIndex);
     }
 
-
-    function editRow(button) {
-        $("#Add").css("display", "none");
-        $("#edit").css("display", "inline");
-        $("#HiddenId").css("display", "inline");
-        $("#titleModel").text("Edit Row");
-        var ActualRow = $(button).parents("tr");
-        var rowIndex = $table.row(ActualRow).index();
+    function editProduct(button) {
+        var actualRow = $(button).parents("tr");
+        var rowIndex = $table.row(actualRow).index();
         var row = $table.row(rowIndex).data();
-        $("#ProductId").val(row.Id);
-        $("#modalName").val(row.Name);
-        $("#modalLastName").val(row.LastName);
-        $("#modalMail").val(row.Mail);
-        $("#ModalPhone").val(row.Phone);
-        $("#selectProductType").val(row.ProductType);
-        $("#indexId").val(rowIndex);
-    }
-    function editProductBotton() {
-        //$.ajax({
-        //    type: "PUT",
-        //    url: " http://localhost:58176/Product/UpdateProduct",
-        //    data: JSON.stringify({
-        //        Id: $("#ProductId").val(),
-        //        Name: $("#modalName").val(),
-        //        LastName: $("#modalLastName").val(),
-        //        Mail: $("#modalMail").val(),
-        //        Phone: $("#ModalPhone").val(),
-        //        ProductType: $("#selectProductType").val()
-        //    }),
-        //    dataType: "json",
-        //    contentType: 'application/json; charset=utf-8',
-        //    success: function (data) {
-        //        if (data) {
-        var obj = {
-            Id: "1",
-            Name: $("#modalName").val(),
-            LastName: $("#modalLastName").val(),
-            Mail: $("#modalMail").val(),
-            Phone: $("#ModalPhone").val(),
-            ProductType: $("#selectProductType").val()
-        };
-        $table.row($("#indexId").val()).data(obj).draw();
-        $("#closeMyModal").click();
-        //        }
-        //        else {
-        //            ValidateMyAlert("Class='alert alert-warning'", 'Something is wrong', 'Warning', "#alertContainer");
-        //        }
-        //    }
-        //});
+        window.location.replace('http://localhost:58176/Product/Edit?ProductId=' + row.Id );
     }
 
 </script>
@@ -229,6 +181,7 @@
                         <button type="button" class="btn btn-default" id="yesDelete">yes</button>
                         <button type="button" class="btn btn-default" id="noDelete" data-dismiss="modal">No</button>
                         <input type="text" class="HiddenIndexx" id="HiddenIndexDelete" style="display:none"> </input>
+                        <input type="text" class="HiddenIndexx" id="indexId" style="display:none"> </input>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal" id="closeDeleteModal">Close</button>

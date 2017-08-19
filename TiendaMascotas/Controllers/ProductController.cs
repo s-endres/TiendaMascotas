@@ -20,6 +20,11 @@ namespace TiendaMascotas.Controllers
             return View();
         }
 
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
         public JsonResult getAllProducts()
         {
             try
@@ -106,7 +111,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateProduct([Bind(Include = "Code,Name,Price,IdProductType")] Product Product)
+        public JsonResult UpdateProduct([Bind(Include = "Id,Code,Name,Price,IdProductType")] Product Product)
         {
             try
             {

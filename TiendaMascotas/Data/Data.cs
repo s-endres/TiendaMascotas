@@ -51,28 +51,28 @@ namespace TiendaMascotas.Data
             {
                 Id = 1,
                 Name = "Small cage",
-                IdCategory = 2
+                CategoryId = 2
             },
 
             new ProductType()
             {
                 Id = 2,
                 Name = "Dog shirt",
-                IdCategory = 3
+                CategoryId = 3
             },
 
             new ProductType()
             {
                 Id = 3,
                 Name = "Rubber Bone",
-                IdCategory = 4
+                CategoryId = 4
             },
 
             new ProductType()
             {
                 Id = 4,
                 Name = "Dog food",
-                IdCategory = 1
+                CategoryId = 1
             }
         };
 

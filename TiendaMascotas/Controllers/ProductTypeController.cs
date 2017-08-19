@@ -35,20 +35,20 @@ namespace TiendaMascotas.Controllers
         {
             try
             {
-                if (!string.IsNullOrEmpty(pProductType.Name) && pProductType.IdCategory >= 0)
+                if (!string.IsNullOrEmpty(pProductType.Name) && pProductType.CategoryId >= 0)
                 {
                     var lastProductType = Data.Data.ProductTypeList.LastOrDefault();
 
                     if (lastProductType == null)
                     {
                         pProductType.Id = 1;
-                        Data.Data.ProductTypeList.Add(lastProductType);
+                        Data.Data.ProductTypeList.Add(pProductType);
                         return Json(pProductType, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
                         pProductType.Id = lastProductType.Id + 1;
-                        Data.Data.ProductTypeList.Add(lastProductType);
+                        Data.Data.ProductTypeList.Add(pProductType);
                         return Json(pProductType, JsonRequestBehavior.AllowGet);
                     }
                 }
@@ -84,7 +84,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpGet]
-        public JsonResult getProductType(int? productTypeId)
+        public JsonResult GetProductTypeById(int? productTypeId)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateProductType([Bind(Include = "Name,CategoryId")] ProductType pProductType)
+        public JsonResult UpdateProductType([Bind(Include = "Id,Name,CategoryId")] ProductType pProductType)
         {
             try
             {
@@ -113,7 +113,7 @@ namespace TiendaMascotas.Controllers
                 if (foundProductType != null)
                 {
                     foundProductType.Name = pProductType.Name;
-                    foundProductType.IdCategory = pProductType.IdCategory;
+                    foundProductType.CategoryId = pProductType.CategoryId;
                     return Json(foundProductType, JsonRequestBehavior.AllowGet);
                 }
                 return Json(false, JsonRequestBehavior.AllowGet);
