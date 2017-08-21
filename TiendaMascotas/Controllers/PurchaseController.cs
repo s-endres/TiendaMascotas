@@ -41,13 +41,21 @@ namespace TiendaMascotas.Controllers
                     }
                     
                     var productData = new List<ProductData>();
-                    foreach (var Product in ProductsId) {
-                        Data.Data.Purchases.Add(new Purchase
+
+                    foreach (var Product in ProductsId) { 
+                        var lastPurchase = Data.Data.Purchases.LastOrDefault();
+                        var newPurchase = new Purchase();
+                        if (lastPurchase == null)
                         {
-                            //AGREGAR ID POR FAVOR -Ricardo
-                            BillId = pBill.Id,
-                            Product = Product
-                        });
+                            newPurchase.Id = 1;
+                        }
+                        else
+                        {
+                            newPurchase.Id = lastPurchase.Id + 1;
+                        }
+                        newPurchase.BillId = pBill.Id;
+                        newPurchase.Product = Product;
+                        Data.Data.Purchases.Add(newPurchase);
                         var product = Data.Data.Products.Where(x => x.Id == Product).SingleOrDefault();
                         product.isSold = true;
                         productData.Add(new ProductData { Nombre = product.Name, Cost = product.Cost });
