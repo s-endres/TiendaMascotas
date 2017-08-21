@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+<!-- Select JavaScript -->
+<link href="/bower_components/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+<script src="/bower_components/select2/js/select2.min.js"></script>
+<!-- Custom Fonts -->
+<link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+<h2>Create</h2>
+
+<script>
+    $(document).ready(function () {
+
+        $("#selectCategory").select2({
+            placeholder: "Select a Category",
+                allowClear: true
+        });
+
+        $("#selectProductType").select2({
+            placeholder: "Select a ProductType",
+            allowClear: true
+        });
+
+
+        //<--Event jQuery -->
+
+
+
+        $("#btnSave").click(function () {
+            createProduct();
+        });
+
+        $("#myModal").on('hidden.bs.modal', function () {
+            $summernoteModal.code("");
+            $("#myModal p[Class='alert alert-danger']").remove();
+
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:58176/Category/getAllCategories",
+            data: "",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $.each(data, function () {
+                    $("#selectCategory").append("<option value=" + this.Id + " >" + this.Name + "</option>");
+                });
+            }
+        });
+
+        $("#selectCategory").change(function () {
+            console.log($(this).val());
+            $("#selectProductType").val('-1').trigger('change');
+            $(".remove").remove();
+
+            if ($(this).val() > 0)
+            {
+                var categoryId = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:58176/ProductType/getAllProductType",
+                    data: "",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $.each(data, function () {
+                            if (this.CategoryId == categoryId) {
+                                $("#selectProductType").append("<option value=" + this.Id + " class='remove'>" + this.Name + "</option>");
+                            }
+                        });
+                    }
+                });
+            }
+
+        });
+    });
+
+
+
+
+    function createProduct() {
+        if (validateMyForm()) {
+            if (consultCode()) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:58176/Product/AddProduct",
+                    data: JSON.stringify({
+                        Code: $("#inputCode").val(),
+                        Name: $("#inputName").val(),
+                        Price: $("#inputPrice").val(),
+                        IdProductType: $("#selectProductType").val()
+                    }),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data) {
+
+                            window.location.replace('http://localhost:58176/Product/Index');
+                        }
+                        else {
+                            ValidateMyAlert("Class='alert alert-danger'", 'data is false', 'Warning', "#alertContainer");
+                        }
+                    },
+                    error: function () {
+                        ValidateMyAlert("Class='alert alert-danger'", 'Error', 'Danger', "#alertContainer");
+                    }
+                });
+            }
+            else { ValidateMyAlert("Class='alert alert-danger'", 'The code is repeated', 'Danger', "#alertContainer");}
+        }
+    }
+
+    function consultCode() {
+        var uniqueCode = true;
+        $.ajaxSetup({ async: false });
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:58176/Product/getAllProducts",
+            data: "",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $.each(data, function () {
+                    if ($("#inputCode").val() === this.Code) {
+                        $(this).parent().removeClass( "has-success");
+                        uniqueCode = false;
+                    }
+                });
+            }
+        });
+        return uniqueCode;
+    }
+
+
+    //Validations
+    function ValidateMyAlert(pClass, pString, tMessege, insertSide) {
+        if (!$("p[" + pClass + "]").length) {
+            $(insertSide).prepend("<p " + pClass + "><strong>" + tMessege + "</strong> " + pString + " </p>");
+        }
+        else {
+            $("p[" + pClass + "]").remove();
+            $(insertSide).prepend("<p " + pClass + "><strong>" + tMessege + "</strong> " + pString + " </p>");
+        }
+    }
+
+    function validateMyForm() {
+        var cellEmpty = true;
+
+        $("input[type='text").each(function () {
+            if ($(this).val().trim() == "") {
+                changeClass($(this).parent(), "has-success", "has-error");
+                cellEmpty = false;
+                console.log("soy el 1");
+            }
+
+            else { changeClass($(this).parent(), "has-error", "has-success"); }
+        });
+
+        if (!$.isNumeric($("input[type='number']").val()) || $("input[type='number']").val() <= 0) {
+
+            changeClass($("input[type='number']").parent(), "has-success", "has-error");
+            ValidateMyAlert("Class='alert alert-danger'", 'price is empty or wrong', 'Warning', "#alertContainer");
+            cellEmpty = false;
+        }
+        else { changeClass($("input[type='number']").parent(), "has-error", "has-success"); }
+
+        if ($("#selectProductType").val() == null) {
+            ValidateMyAlert("Class='alert alert-danger'", 'Select a ProductType', 'Warning', "#alertContainer");
+            cellEmpty = false;
+            console.log("soy el 3");
+            }
+
+        if ($("#selectCategory").val() == null) {
+            ValidateMyAlert("Class='alert alert-danger'", 'Select a Category', 'Warning', "#alertContainer");
+            cellEmpty = false;
+            console.log("soy el 4");
+        }
+
+        return cellEmpty;
+    }
+
+    function changeClass(input, classRemove, classAdd) {
+        input.removeClass(classRemove);
+        input.addClass(classAdd);
+    }
+
+</script>
+
+
+<div class="form-horizontal">
+
+    <div id="alertContainer"> </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Code</label>
+        <div class="col-md-10">
+            <input type="text" id="inputCode" class="form-control"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Name</label>
+        <div class="col-md-10">
+            <input type="text" id="inputName" class="form-control"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Category</label>
+        <div class="col-md-10">
+            <select id="selectCategory" class="form-control">
+                <option value="-1" selected="selected" disabled>Select a category</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">ProductType</label>
+        <div class="col-md-10">
+            <select id="selectProductType" class="form-control">
+                <option value="-1" selected="selected" disabled>Select a ProductType</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Price</label>
+        <div class="col-md-10">
+            <input type="number" id="inputPrice" class="form-control"></input>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div>
+            <input type="button" id="btnSave" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>

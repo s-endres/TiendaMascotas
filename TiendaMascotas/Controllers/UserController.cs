@@ -31,15 +31,42 @@ namespace TiendaMascotas.Controllers
             }
         }
 
-        public JsonResult getUserNameById(int? userId)
+        [HttpPost]
+        public JsonResult AddUser([Bind(Include = "Id, Name, LastName, PhoneNumber, Email, UserTypeId")] User pUser)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(pUser.Name) && !string.IsNullOrEmpty(pUser.LastName) && !string.IsNullOrEmpty(pUser.Email) && !string.IsNullOrEmpty(pUser.PhoneNumber.ToString()))
+                {
+                    var lastUser = Data.Data.Users.LastOrDefault();
+                    if (lastUser != null)
+                    {
+                        pUser.Id = lastUser.Id + 1;
+                        Data.Data.Users.Add(pUser);
+                        return Json(pUser, JsonRequestBehavior.AllowGet);
+                    }
+
+                    pUser.Id = 1;
+                    Data.Data.Users.Add(pUser);
+                    return Json(pUser, JsonRequestBehavior.AllowGet);
+                }
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult getUserById(int? userId)
         {
             try
             {
                 if (userId!=null) {
-                    var UserName = Data.Data.Users.Where(u => u.Id == userId).FirstOrDefault();
+                    var User = Data.Data.Users.Where(u => u.Id == userId).FirstOrDefault();
 
-                    if (UserName!=null) {
-                        return Json(UserName, JsonRequestBehavior.AllowGet);
+                    if (User!=null) {
+                        return Json(User, JsonRequestBehavior.AllowGet);
                     }
                 }
                 return Json(false, JsonRequestBehavior.AllowGet);
@@ -50,76 +77,120 @@ namespace TiendaMascotas.Controllers
             }
         }
 
-        // GET: User/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: User/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: User/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [HttpDelete]
+        public JsonResult RemoveUser(int? userId)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                var _user = Data.Data.Users.Where(f => f.Id == userId).FirstOrDefault();
+                if (_user != null)
+                {
+                    Data.Data.Users.Remove(_user);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                }
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                return View();
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
 
-        // GET: User/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: User/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [HttpPut]
+        public JsonResult UpdateUser([Bind(Include = "Id, Name, LastName, PhoneNumber, Email, UserTypeId")] User pUser)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (!string.IsNullOrEmpty(pUser.Id.ToString()) && !string.IsNullOrEmpty(pUser.Name) && !string.IsNullOrEmpty(pUser.LastName) && !string.IsNullOrEmpty(pUser.Email) && !string.IsNullOrEmpty(pUser.PhoneNumber.ToString()))
+                {
+                    var foundUser = Data.Data.Users.Where(u => u.Id == pUser.Id).FirstOrDefault();
+                    if (foundUser != null)
+                    {
+                        foundUser.Name = pUser.Name;
+                        foundUser.LastName = pUser.LastName;
+                        foundUser.PhoneNumber = pUser.PhoneNumber;
+                        foundUser.Email = pUser.Email;
+                        foundUser.UserTypeId = pUser.UserTypeId;
+                        return Json(foundUser, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                return View();
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
+        //// GET: User/Details/5
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
 
-        // GET: User/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //// GET: User/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: User/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+        //// POST: User/Create
+        //[HttpPost]
+        //public ActionResult Create(FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add insert logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: User/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: User/Edit/5
+        //[HttpPost]
+        //public ActionResult Edit(int id, FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add update logic here
+
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: User/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: User/Delete/5
+        //[HttpPost]
+        //public ActionResult Delete(int id, FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add delete logic here
+
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

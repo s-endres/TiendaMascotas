@@ -30,77 +30,96 @@ namespace TiendaMascotas.Controllers
             }
         }
 
-
-        // GET: UserType/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: UserType/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserType/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public JsonResult GetUserTypeById(int? userTypeId)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                if (userTypeId!=null) {
+                    var userType = Data.Data.UserTypes.Where(p => p.Id == userTypeId).FirstOrDefault();
+                    if (userType != null)
+                    {
+                        return Json(userType, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                return View();
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
 
-        // GET: UserType/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: UserType/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
+        //    // GET: UserType/Details/5
+        //    public ActionResult Details(int id)
+        //    {
+        //        return View();
+        //    }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //    // GET: UserType/Create
+        //    public ActionResult Create()
+        //    {
+        //        return View();
+        //    }
 
-        // GET: UserType/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //    // POST: UserType/Create
+        //    [HttpPost]
+        //    public ActionResult Create(FormCollection collection)
+        //    {
+        //        try
+        //        {
+        //            // TODO: Add insert logic here
 
-        // POST: UserType/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch
+        //        {
+        //            return View();
+        //        }
+        //    }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+        //    // GET: UserType/Edit/5
+        //    public ActionResult Edit(int id)
+        //    {
+        //        return View();
+        //    }
+
+        //    // POST: UserType/Edit/5
+        //    [HttpPost]
+        //    public ActionResult Edit(int id, FormCollection collection)
+        //    {
+        //        try
+        //        {
+        //            // TODO: Add update logic here
+
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch
+        //        {
+        //            return View();
+        //        }
+        //    }
+
+        //    // GET: UserType/Delete/5
+        //    public ActionResult Delete(int id)
+        //    {
+        //        return View();
+        //    }
+
+        //    // POST: UserType/Delete/5
+        //    [HttpPost]
+        //    public ActionResult Delete(int id, FormCollection collection)
+        //    {
+        //        try
+        //        {
+        //            // TODO: Add delete logic here
+
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch
+        //        {
+        //            return View();
+        //        }
+        //    }
         }
     }
-}
