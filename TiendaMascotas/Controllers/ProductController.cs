@@ -31,7 +31,7 @@ namespace TiendaMascotas.Controllers
                 }
                 else
                 {
-                    ObjProduct.Id = +1;
+                    ObjProduct.Id = LastProduct.Id+1 ;
                     ObjProduct.SoldStatus = false;
                     ProductData.ProductsList.Add(ObjProduct);
                     return Json(ObjProduct, JsonRequestBehavior.AllowGet);

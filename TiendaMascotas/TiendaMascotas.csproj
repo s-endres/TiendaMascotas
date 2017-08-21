@@ -176,11 +176,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProductTypeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Data\BillData.cs" />
+    <Compile Include="Data\CategoryData.cs" />
     <Compile Include="Data\Data.cs" />
     <Compile Include="Data\DiscountData.cs" />
     <Compile Include="Data\ProductData.cs" />
@@ -1027,6 +1029,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Product\ProductIndex.cshtml" />
     <Content Include="Views\ProductType\ProductTypeIndex.cshtml" />
+    <Content Include="Views\Category\CategoryIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
