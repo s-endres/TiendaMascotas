@@ -56,7 +56,7 @@ namespace TiendaMascotas.Controllers
         [HttpPut]
         public JsonResult UpdateProduct([Bind(Include = "Id, Code, Name, Price")] Product ObjProduct)
         {
-            if(ObjProduct.Id != null)
+            if(ObjProduct.Id != 0)
             {
                 var EditProduct = ProductData.ProductsList.Where(P => P.Id == ObjProduct.Id).FirstOrDefault();
                 EditProduct.Code = ObjProduct.Code;

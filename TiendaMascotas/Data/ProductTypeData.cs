@@ -10,6 +10,14 @@ namespace TiendaMascotas.Data
     {
         public static List<ProductType> ProductTypeList = new List<ProductType>()
         {
+            new ProductType() {
+
+                Id = 1,
+                TypeName = "Jaja salu2",
+                IdCateogry = 1
+            }
+
+
         };
     }
 }
