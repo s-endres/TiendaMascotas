@@ -10,6 +10,7 @@ namespace TiendaMascotas.Models
         public int Id { get; set; }
         public double BaseTotal { get; set; }
         public double NetTotal { get; set; }
+        public string Code { get; set; }
         public int UserId { get; set; }
         public DateTime Date { get; set; }
         public int DiscountId { get; set; }

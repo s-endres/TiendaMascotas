@@ -105,7 +105,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateCategory([Bind(Include = "Name")] Category pCategory)
+        public JsonResult UpdateCategory([Bind(Include = "Id, Name")] Category pCategory)
         {
             try
             {

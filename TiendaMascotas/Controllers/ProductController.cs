@@ -107,7 +107,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateProduct([Bind(Include = "Id,ANCode,Name,Cost,ProductType")] Product pProduct)
+        public JsonResult UpdateProduct([Bind(Include = "Id, ANCode, Name, Cost, ProductType")] Product pProduct)
         {
             try
             {
