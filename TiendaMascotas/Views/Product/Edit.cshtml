@@ -164,7 +164,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $.each(data, function () {
-                    if ($("#inputCode").val() === this.Code && this.Id != $.urlParam("ProductId") ) {
+                    if ($("#inputCode").val().trim() === this.Code && this.Id != $.urlParam("ProductId")) {
                         $(this).parent().removeClass( "has-success");
                         uniqueCode = false;
                     }

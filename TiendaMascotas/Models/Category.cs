@@ -9,5 +9,6 @@ namespace TiendaMascotas.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool isDelete { get; set; }
     }
 }

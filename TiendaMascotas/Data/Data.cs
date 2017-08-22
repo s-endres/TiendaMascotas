@@ -46,7 +46,14 @@ namespace TiendaMascotas.Data
         public static List<Product> ProductList = new List<Product>();
 
         public static List<ProductType> ProductTypeList = new List<ProductType>()
-        { 
+        {
+
+            new ProductType()
+            {
+                Id = 0,
+                Name = "Blank",
+            },
+
             new ProductType()
             {
                 Id = 1,

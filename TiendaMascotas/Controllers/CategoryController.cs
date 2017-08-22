@@ -18,7 +18,8 @@ namespace TiendaMascotas.Controllers
         {
             try
             {
-                return Json(Data.Data.CategoryList, JsonRequestBehavior.AllowGet);
+                var CategoryList = Data.Data.CategoryList.Where(f => f.isDelete == false).ToList();
+                return Json(CategoryList, JsonRequestBehavior.AllowGet);
             }
             catch
             {
@@ -77,16 +78,26 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpDelete]
-        public JsonResult RemoveCategory(int? pCategoryId)
+        public JsonResult RemoveCategory(int? CategoryId)
         {
             try
             {
-                if (pCategoryId != null)
-                {
-                    var Category = Data.Data.CategoryList.Where(c => c.Id == pCategoryId).FirstOrDefault();
+                if (CategoryId != null)
+                {              
+                    var productTypeList = Data.Data.ProductTypeList.Where(f => f.CategoryId == CategoryId).ToList();
+                    var Category = Data.Data.CategoryList.Where(c => c.Id == CategoryId).FirstOrDefault();
                     if (Category != null)
                     {
-                        Data.Data.CategoryList.Remove(Category);
+                        Category.isDelete = true;
+                        foreach (var ProducType in productTypeList)
+                        {
+                            ProducType.isDelete = true;
+                            var productList = Data.Data.ProductList.Where(f => f.IdProductType == ProducType.Id).ToList();
+                            foreach (var Product in productList)
+                            {
+                                Product.IdProductType = 0;
+                            }
+                        }
                         return Json(true, JsonRequestBehavior.AllowGet);
                     }
 
@@ -100,7 +111,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpPut]
-        public JsonResult UpdateCategory([Bind(Include = "Name")] Category pCategory)
+        public JsonResult UpdateCategory([Bind(Include = "Id,Name")] Category pCategory)
         {
             try
             {

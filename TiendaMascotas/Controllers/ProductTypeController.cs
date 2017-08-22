@@ -21,7 +21,8 @@ namespace TiendaMascotas.Controllers
             {
                 if (Data.Data.ProductTypeList.Count > 0)
                 {
-                    return Json(Data.Data.ProductTypeList, JsonRequestBehavior.AllowGet);
+                    var productTypeList = Data.Data.ProductTypeList.Where(f => f.isDelete == false && f.Id > 0).ToList();
+                    return Json(productTypeList, JsonRequestBehavior.AllowGet);
                 }
                 return Json(false, JsonRequestBehavior.AllowGet);
             }
@@ -67,10 +68,16 @@ namespace TiendaMascotas.Controllers
             {
                 if (productTypeId != null)
                 {
+                    var productList = Data.Data.ProductList.Where(f => f.IdProductType == productTypeId).ToList();
                     var productType = Data.Data.ProductTypeList.Where(p => p.Id == productTypeId).FirstOrDefault();
                     if (productType != null)
                     {
-                        Data.Data.ProductTypeList.Remove(productType);
+                        productType.isDelete = true;
+                        foreach (var Product in productList)
+                        {
+                            Product.IdProductType = 0;
+                        }
+
                         return Json(true, JsonRequestBehavior.AllowGet);
                     }
 
