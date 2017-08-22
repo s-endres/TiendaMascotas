@@ -11,6 +11,6 @@ namespace TiendaMascotas.Models
 
         public string Name { get; set; }
 
-        public string IdCategory { get; set; }
+        public int IdCategory { get; set; }
     }
 }

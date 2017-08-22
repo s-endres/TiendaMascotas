@@ -56,5 +56,7 @@ namespace TiendaMascotas.Data
 
         public static List<DiscountType> DiscountType = new List<DiscountType>() { };
 
+        public static List<Bill> Bills = new List<Bill>() { };
+
     }
 }

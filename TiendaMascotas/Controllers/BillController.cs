@@ -14,24 +14,8 @@ namespace TiendaMascotas.Controllers
         {
             return View();
         }
+        
 
-        [HttpPost]
-        public JsonResult AddBill([Bind(Include = "IdUser, Code, Date")] Bill Bill)
-        {
-
-            return Json(false, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult GetallBills()
-        {
-            return Json(false, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPut]
-        public JsonResult UpdateBill()
-        {
-            return Json(false, JsonRequestBehavior.AllowGet);
-        }
+        
     }
 }
