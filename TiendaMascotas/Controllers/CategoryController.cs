@@ -41,5 +41,11 @@ namespace TiendaMascotas.Controllers
             }
             return Json(false, JsonRequestBehavior.AllowGet);
         }//
+
+        public JsonResult GetCategoryByTypeId(int? pTypeId)
+        {
+            return Json(CategoryData.CategoryList.Where(C => C.Id == pTypeId).FirstOrDefault());
+        }  //GetCategoryById 
+        
     }
 }

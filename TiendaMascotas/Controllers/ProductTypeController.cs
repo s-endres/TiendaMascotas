@@ -18,7 +18,7 @@ namespace TiendaMascotas.Controllers
         [HttpPost]
         public JsonResult AddNewProductType([Bind(Include = "TypeName, IdCategory")] ProductType ObjType)
         {
-            if (!string.IsNullOrEmpty(ObjType.TypeName) && ObjType.IdCateogry != null)
+            if (!string.IsNullOrEmpty(ObjType.TypeName) && ObjType.IdCategory != null)
             {
                 var LastType = ProductTypeData.ProductTypeList.LastOrDefault();
                 if (LastType == null)

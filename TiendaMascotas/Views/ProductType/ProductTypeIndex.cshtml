@@ -40,7 +40,7 @@
                         "columns": [
                             { "data": "Id" },
                             { "data": "TypeName" },
-                            {"defaultContent": "<span class='glyphicon glyphicon-remove-circle'></span> |" + " <span class='glyphicon glyphicon-ok-circle'></span> |" + " <span class='glyphicon glyphicon-unchecked'></span>" }
+                            { "defaultContent": "<span class='glyphicon glyphicon-remove-circle'></span> |" + " <span class='glyphicon glyphicon-ok-circle'></span> |" + " <span class='glyphicon glyphicon-unchecked'></span>" }
                         ],
                         responsive: true
                     });//Inicialize the Data Table
@@ -58,10 +58,8 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (pData) {
                     if (pData) {
-                        
+
                         $.each(pData, function () {
-                            console.log(this.Id);
-                            console.log(this.Name);
                             $("#SelectCategory").append('<option value="' + this.Id + '">' + this.Name + '</option>');
                         });
                     }
@@ -75,26 +73,25 @@
                 error: function () {
                     WarningMessage();
                 }
-                });//Close Ajax GET Categories
+            });//Close Ajax GET Categories
 
-    
- 
             $("#AddType").click(function () {
                 $.ajax({
                     type: "POST",
                     url: "http://localhost:58176/ProductType/AddNewProductType",
                     data: JSON.stringify({
                         TypeName: $("#TypeName").val(),
-                        //IdCategory: $("#SelectCategory").val()
+                        IdCategory: $("#SelectCategory").val()
                     }),
                     dataType: "json",
                     contentType: 'application/json; charset=utf-8',
                     success: function (pData) {
                         var ObjPost = {
                             Id: pData.Id,
-                            TypeName: $("#TypeName").val(),                            
+                            TypeName: $("#TypeName").val(),
+                            IdCategory: $("#SelectCategory").val()
                         };
-                        console.log($("#SelectCategory").val());
+                        console.log(ObjPost);
                         $Table
                             .row
                             .add(ObjPost)
@@ -105,6 +102,16 @@
                     }
                 });//Close POST Ajax
             });
+
+            $("tbody").on("click", ".glyphicon-ok-circle", function () {
+                var Row = $(this).parents("tr")
+                var Index = $Table.row(Row).index();
+                var Data = $Table.row(Index).data();
+                console.log(Data);
+
+            })
+
+
         });//Close Document Ready
 
 
@@ -116,6 +123,7 @@
             $("#EditRow").css("display", "none");
 
         }
+
         function CloseModal()
         {
             $("#myModal").modal("hide");

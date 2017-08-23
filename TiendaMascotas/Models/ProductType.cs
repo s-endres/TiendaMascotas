@@ -9,6 +9,6 @@ namespace TiendaMascotas.Models
     {
         public int Id { get; set; }
         public string TypeName { get; set; }
-        public int IdCateogry { get; set; }
+        public int IdCategory { get; set; }
     }
 }

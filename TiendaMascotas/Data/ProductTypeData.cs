@@ -14,7 +14,7 @@ namespace TiendaMascotas.Data
 
                 Id = 1,
                 TypeName = "Jaja salu2",
-                IdCateogry = 1
+                IdCategory = 1
             }
 
 

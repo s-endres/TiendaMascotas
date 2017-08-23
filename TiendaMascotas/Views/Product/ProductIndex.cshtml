@@ -100,7 +100,35 @@
                 });//Close POST Ajax
             });
 
+            $.get("http://localhost:58176/ProductType/GetAllTypes", function (pData) {
+                if (pData) {
 
+                    $.each(pData, function () {
+                        $("#SelectProductType").append('<option value="' + this.Id + '">' + this.TypeName + '</option>');
+                    });
+                }
+                else {
+
+                    if (!$('div[class="alert-danger"]').length) {
+                        $(".form-group").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong>Something went wrong</div>');
+                    }
+                }
+            });//Close GET Ajax Product Types
+
+            $.get("http://localhost:58176/Category/GetAllCategories", function (pData) {
+                if (pData) {
+                    $.each(pData, function () {
+                        
+                        $("#SelectCategory").append('<option value="' + this.Id + '">' + this.Name + '</option>');
+                    });
+                }
+                else {
+
+                    if (!$('div[class="alert-danger"]').length) {
+                        $(".form-group").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong>Something went wrong</div>');
+                    }
+                }
+            });//Close GET Ajax Product Types
         });
 
         /********************************************FUNCTIONS********************************************/
@@ -185,8 +213,12 @@
                             <input type="text" class="form-control ClassName" id="Name" placeholder="Enter Name of the product">
                         </div>
                         <div class="form-group">
+                            <label for="usrname"><span class="glyphicon glyphicon-user"></span> Category</label>
+                            <select class="form-control NewOne" id="SelectCategory"></select>
+                        </div>
+                        <div class="form-group">
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span> Product Type</label>
-                            <select class="form-control NewOne" id="SelectProductType"></select>
+                            <select class="form-control NewOne" id="SelectProductType" disabled><option value="1">Pick Category</option></select>
                         </div>
                         <div class="form-group">
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span> Price</label>
