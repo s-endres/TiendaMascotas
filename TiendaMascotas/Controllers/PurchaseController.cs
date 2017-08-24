@@ -22,7 +22,7 @@ namespace TiendaMascotas.Controllers
             public List<Product> Products { get; set; }
         }
 
-        public JsonResult AddPurchase([Bind(Include = "BaseTotal, NetTotal, Code, IdUser")] Bill Bill, List<int> ProductIds)
+        public JsonResult AddPurchase([Bind(Include = "Code, IdUser")] Bill Bill, List<int> ProductIds)
         {
             //FALTA EL ADD DISCOUNT
             var LastBill = Data.Data.Bills.LastOrDefault();
