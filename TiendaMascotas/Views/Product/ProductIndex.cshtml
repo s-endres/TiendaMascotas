@@ -28,6 +28,7 @@
     <script>
         $("document").ready(function () {
 
+            $.ajaxSetup({ async: false });
             $.ajax({
                 type: "GET",
                 url: "http://localhost:58176/Product/GetAllProducts",
@@ -35,6 +36,13 @@
                 dataType: "json",
                 contentType: 'application/json; charset=utf-8',
                 success: function (pData) {
+
+                    for (var i = 0; i < pData.length; i++) {
+                        $.get("http://localhost:58176/ProductType/GetTypeById", { pProductTypeId: pData[i].IdType }, function (PData) {
+                            console.log(PData)
+                            pData[i].IdType = PData.TypeName;
+                        });
+                    };
 
                     $Table = $("#MainTable").DataTable({
                         "processing": true,
@@ -44,7 +52,7 @@
                             { "data": "Id" },
                             { "data": "Code" },
                             { "data": "Name" },
-                            { "data": "Product Type" },
+                            { "data": "IdType" },
                             { "data": "Price" },
                             { "defaultContent": "<span class='glyphicon glyphicon-remove-circle'></span> |" + " <span class='glyphicon glyphicon-ok-circle'></span> |" + " <span class='glyphicon glyphicon-unchecked'></span>" }
                         ],
@@ -66,15 +74,15 @@
             });//Close GET Ajax
 
             $("#AddProduct").click(function () {
-
+                console.log($("#SelectProductType").val());
                 $.ajax({
                     type: "POST",
                     url: "http://localhost:58176/Product/AddNewProduct",
                     data: JSON.stringify({
                         Code: $("#Code").val(),
                         Name: $("#Name").val(),
-                        ProductType: $("#SelectProductType").val(),
-                        Price: $("#Price").val()
+                        Price: $("#Price").val(),
+                        IdType: $("#SelectProductType").val()
                     }),
                     dataType: "json",
                     contentType: 'application/json; charset=utf-8',
@@ -83,16 +91,20 @@
                             Id: pData.Id,
                             Code: $("#Code").val(),
                             Name: $("#Name").val(),
+                            IdType: $("#SelectProductType").val(),
                             Price: $("#Price").val()
                         };
+                        $.get("http://localhost:58176/ProductType/GetTypeById", { pProductTypeId: ObjPost.IdType }, function (PData) {
+                            console.log(PData)
+                            ObjPost.IdType = PData.TypeName;
+                        });
                         console.log(pData);
+                        console.log($("#SelectProductType").val());
                         $Table
                             .row
                             .add(ObjPost)
                             .draw();
                         CloseModal();
-
-
                     },
                     error: function () {
 
@@ -100,25 +112,35 @@
                 });//Close POST Ajax
             });
 
-            $.get("http://localhost:58176/ProductType/GetAllTypes", function (pData) {
-                if (pData) {
 
-                    $.each(pData, function () {
-                        $("#SelectProductType").append('<option value="' + this.Id + '">' + this.TypeName + '</option>');
-                    });
-                }
-                else {
+            $("#SelectCategory").change(function () {
+                $("#SelectProductType").empty();
+                $.get("http://localhost:58176/ProductType/GetTypeByCategoryId", { pCategoryId: $("#SelectCategory").val() }, function (pData) {
+                    if (pData) {
 
-                    if (!$('div[class="alert-danger"]').length) {
-                        $(".form-group").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong>Something went wrong</div>');
+                        $.each(pData, function () {
+                            $("#SelectProductType").append('<option value="' + this.Id + '">' + this.TypeName + '</option>');
+                        });
                     }
-                }
-            });//Close GET Ajax Product Types
+                    else {
 
+                        if (!$('div[class="alert-danger"]').length) {
+                            $(".form-group").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong>Something went wrong</div>');
+                        }
+                    }
+                   
+                    $("#SelectProductType").removeAttr("disabled");
+                    
+                });
+
+                
+
+
+            });
             $.get("http://localhost:58176/Category/GetAllCategories", function (pData) {
                 if (pData) {
                     $.each(pData, function () {
-                        
+
                         $("#SelectCategory").append('<option value="' + this.Id + '">' + this.Name + '</option>');
                     });
                 }
@@ -137,10 +159,17 @@
             $("#EditRow").css("display", "none");
             $("#myModal").modal();
         }
-        function CloseModal()
-        {
+        function CloseModal() {
             $("#myModal").modal("hide");
         }
+        function ValidateSelectCategory(pSelectCategory, pSelectProductType)
+        {
+            if (pSelectCategory == -1 || pSelectProductType == -1 )
+            {
+                $(".ValidationModal").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong> Missing Category or Product Type >:v</div>');
+            }
+        }
+
 
 
 
@@ -182,8 +211,9 @@
                     <label>Buttons</label>
                 </th>
             </tr>
-        <tbody></tbody>
         </thead>
+        <tbody></tbody>
+
     </table>
     <!------------------------------------------MAIN TABLE------------------------------------------>
     <!------------------------------------------MODAL------------------------------------------>
@@ -214,11 +244,11 @@
                         </div>
                         <div class="form-group">
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span> Category</label>
-                            <select class="form-control NewOne" id="SelectCategory"></select>
+                            <select class="form-control NewOne" id="SelectCategory"><option value="-1">Pick Category</option></select>
                         </div>
                         <div class="form-group">
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span> Product Type</label>
-                            <select class="form-control NewOne" id="SelectProductType" disabled><option value="1">Pick Category</option></select>
+                            <select class="form-control NewOne" id="SelectProductType" disabled><option value="-1">Pick Type</option></select>
                         </div>
                         <div class="form-group">
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span> Price</label>

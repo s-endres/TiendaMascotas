@@ -29,7 +29,7 @@ namespace TiendaMascotas.Controllers
                 }
                 else
                 {
-                    ObjType.Id = +1;
+                    ObjType.Id = LastType.Id + 1;
                     ProductTypeData.ProductTypeList.Add(ObjType);
                     return Json(ObjType, JsonRequestBehavior.AllowGet);
                 }
@@ -42,5 +42,20 @@ namespace TiendaMascotas.Controllers
         {
             return Json(ProductTypeData.ProductTypeList, JsonRequestBehavior.AllowGet);
         }//Close GetAllProducts
+
+        [HttpGet]
+        public JsonResult GetTypeByCategoryId(int? pCategoryId)
+        {
+            var Var = ProductTypeData.ProductTypeList.Where(T => T.IdCategory == pCategoryId).ToList();
+
+            return Json(ProductTypeData.ProductTypeList.Where(T => T.IdCategory == pCategoryId).ToList(), JsonRequestBehavior.AllowGet);
+        }  //Close GetTypeByCategoryId 
+
+        [HttpGet]
+        public JsonResult GetTypeById(int? pProductTypeId)
+        {
+            return Json(ProductTypeData.ProductTypeList.Where(P => P.Id == pProductTypeId).FirstOrDefault(), JsonRequestBehavior.AllowGet);
+        }//Close GetTypeById
+
     }
 }

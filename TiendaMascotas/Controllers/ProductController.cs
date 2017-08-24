@@ -17,7 +17,7 @@ namespace TiendaMascotas.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddNewProduct([Bind(Include = "Code, Name, Quantity, Price")] Product ObjProduct)
+        public JsonResult AddNewProduct([Bind(Include = "Code, Name, Quantity, Price, IdType")] Product ObjProduct)
         {
             if (!string.IsNullOrEmpty(ObjProduct.Code) && !string.IsNullOrEmpty(ObjProduct.Name))
             {
