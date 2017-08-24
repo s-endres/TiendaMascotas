@@ -76,33 +76,35 @@
             });//Close Ajax GET Categories
 
             $("#AddType").click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost:58176/ProductType/AddNewProductType",
-                    data: JSON.stringify({
-                        TypeName: $("#TypeName").val(),
-                        IdCategory: $("#SelectCategory").val()
-                    }),
-                    dataType: "json",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (pData) {
-                        var ObjPost = {
-                            Id: pData.Id,
+                var SelectCategory = $("#SelectCategory").val();
+                if (ValidateSelector(SelectCategory)) {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:58176/ProductType/AddNewProductType",
+                        data: JSON.stringify({
                             TypeName: $("#TypeName").val(),
                             IdCategory: $("#SelectCategory").val()
-                        };
-                        console.log(ObjPost);
-                        $Table
-                            .row
-                            .add(ObjPost)
-                            .draw();
-                        CloseModal();
-                    },
-                    error: function () {
-                    }
-                });//Close POST Ajax
+                        }),
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (pData) {
+                            var ObjPost = {
+                                Id: pData.Id,
+                                TypeName: $("#TypeName").val(),
+                                IdCategory: $("#SelectCategory").val()
+                            };
+                            console.log(ObjPost);
+                            $Table
+                                .row
+                                .add(ObjPost)
+                                .draw();
+                            CloseModal();
+                        },
+                        error: function () {
+                        }
+                    });//Close POST Ajax
+                }//Close Validation   
             });
-
             $("tbody").on("click", ".glyphicon-ok-circle", function () {
                 var Row = $(this).parents("tr")
                 var Index = $Table.row(Row).index();
@@ -110,28 +112,35 @@
                 console.log(Data);
 
             })
-
-
         });//Close Document Ready
 
 
         /*************************************FUNCTIONS AREA*************************************/
-        function OpenModal()
-        {
+        function OpenModal() {
             $("#myModal").modal();
             $(".IdDiv").css("display", "none");
             $("#EditRow").css("display", "none");
-
+            $(".alert").remove();
         }
 
-        function CloseModal()
-        {
+        function CloseModal() {
             $("#myModal").modal("hide");
         }
+
+        function ValidateSelector(pSelectCategory) {
+            if (pSelectCategory == -1) {
+                $(".ValidationModal").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong> Missing Category >:v</div>');                
+            }
+        }
+
+
     </script>
     <style>
         #hidden {
-            display:none;
+            display: none;
+        }
+        .Error {
+            border: solid 1px red;
         }
     </style>
 
@@ -173,7 +182,7 @@
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span> Id</label>
                             <input type="text" class="form-control NewOne" id="Id" readonly>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="usrname"><span class="glyphicon glyphicon-user"></span>Type Name</label>
                             <input type="text" class="form-control ClassName" id="TypeName" placeholder="Enter Name of the product">
@@ -182,7 +191,7 @@
                     </form>
                     <div class="form-group">
                         <label for="usrname"><span class="glyphicon glyphicon-user"></span>Categories</label>
-                        <select class="form-control" id="SelectCategory"></select>
+                        <select class="form-control" id="SelectCategory"><option value="-1">Pick A Category</option></select>
                     </div>
                 </div>
 
@@ -201,11 +210,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-

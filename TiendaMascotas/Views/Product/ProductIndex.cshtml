@@ -128,14 +128,8 @@
                             $(".form-group").prepend('<div class="alert alert-danger"><strong>Omaiga!</strong>Something went wrong</div>');
                         }
                     }
-                   
                     $("#SelectProductType").removeAttr("disabled");
-                    
                 });
-
-                
-
-
             });
             $.get("http://localhost:58176/Category/GetAllCategories", function (pData) {
                 if (pData) {
